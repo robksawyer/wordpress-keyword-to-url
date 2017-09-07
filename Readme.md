@@ -1,12 +1,12 @@
 # Keyword to URL
 
-Contributors: MBird, robksawyer
-Tags: keywords, links
-Requires at least: 3.2
-Tested up to: 4.3
-Stable tag: 1.5
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
+- Contributors: MBird, robksawyer
+- Tags: keywords, links
+- Requires at least: 3.2
+- Tested up to: 4.3
+- Stable tag: 1.5
+- License: GPLv3 or later
+- License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
 
 Keyword to URL allows admins to create and save a list of keywords paired with URLs. Any keyword appearing in a post is then shown as a link.
 
