@@ -165,7 +165,7 @@ function keyword_to_url_filter_handler( $content ) {
 			$temp .= substr( $content, $i, $keywordStart - $i );
 			$urlPrefix = '';
 			if ( strpos( $url, '@' ) === false ) {
-				$urlPrefix = 'http://';
+				$urlPrefix = 'https://';
 			} else {
 				$urlPrefix = 'mailto:';
 			}
@@ -279,7 +279,7 @@ function keyword_to_url_html_page() {
 			foreach ( $e1 as $e1Value ) {
 				$e2 = explode( 'mcn0', $e1Value );
 				if ( !empty( $e2[0] ) ) {
-					$urlPrefix = ( strpos( $e2[1], '@' ) ) ? 'mailto:' : 'http://';
+					$urlPrefix = ( strpos( $e2[1], '@' ) ) ? 'mailto:' : 'https://';
 					print(
 						'<tr>' .
 							'<td>' .

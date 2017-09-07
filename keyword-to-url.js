@@ -22,9 +22,6 @@ jQuery(document).ready( function($) {
 
 		mcnkeywordtourlTurnOffAllValidationMessages();
 
-		echo('inserting url...');
-		echo(mcnkeywordtourlSource.MANUAL, $("#mcnkeywordtourlKeyword").val(), $("#mcnkeywordtourlURL").val());
-
 		insertKeywordUrlIntoTable(
 			mcnkeywordtourlSource.MANUAL, $("#mcnkeywordtourlKeyword").val(), $("#mcnkeywordtourlURL").val()
 		);
@@ -109,6 +106,7 @@ jQuery(document).ready( function($) {
 
 		//Remove prefix (we calculate and add a prefix during renderings)
 		url = url.replace( "http://", "" );
+		url = url.replace( "https://", "" );
 		url = url.replace( "mailto:", "" );
 
 		//See if either field is empty
@@ -152,7 +150,7 @@ jQuery(document).ready( function($) {
 			return;
 		}
 
-		var urlPrefix = ( url.indexOf('@') > 0 ) ? 'mailto:' : 'http://';
+		var urlPrefix = ( url.indexOf('@') > 0 ) ? 'mailto:' : 'https://';
 		$('#mcnkeywordtourlTable').prepend(
 			'<tr>' +
 				'<td><span class="mcnkeywordtourlRemoveClass">Remove</span></td>' +
