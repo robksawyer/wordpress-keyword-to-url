@@ -8,7 +8,7 @@ License: GPL
 Copyright 2017 MBird
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
+it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -28,24 +28,24 @@ add_filter( 'the_content', 'keyword_to_url_filter_handler' );
 //add_filter( 'the_excerpt', 'keyword_to_url_filter_handler' );
 
 function keyword_to_url_filter_handler( $content ) {
-	
+
 	//---------------------------------------------
 	//If the special comment is present then exit
-	
+
 	//Users can add this comment anywhere in a post to signal not to use the plugin for that post
-	if ( stripos( $content, '<!-- no keywords -->' ) !== false ) { 
+	if ( stripos( $content, '<!-- no keywords -->' ) !== false ) {
 		return $content;
 	}
 
 	//---------------------------------------------
 	//Get the keyword/url list from database
-	
+
 	$mcn_keyword_to_url_serialized = get_option('mcn_keyword_to_url_serialized');
 	$mcn_keyword_to_url_first_only = get_option('mcn_keyword_to_url_first_only');
-	
+
 	//If there are no keywords then exit
 	if ( strlen( $mcn_keyword_to_url_serialized ) == 0 ) { return $content; }
-	
+
 	//De-serilaize keywords
 	$aKeywords = array();
 	$s = explode( 'mcn1', $mcn_keyword_to_url_serialized );
@@ -54,39 +54,39 @@ function keyword_to_url_filter_handler( $content ) {
 			array_push( $aKeywords, explode( 'mcn0', $pair ) );
 		}
 	}
-	
+
 	//---------------------------------------------
 	//Find all pre-existing selectors
-	
+
 	$aSelector = array();
 	$i = 0;
 	$startSelector = 0;
 	$endSelector = 0;
-	
+
 	while( $i < strlen( $content ) ) {
-		
+
 		//We have found a selector ('<' followed by a non-space char)
 		if ( ( substr($content, $i, 1) == '<' ) && ( substr($content, $i+1, 1) != ' ' ) ) {
-			$startSelector = $i;							
-			
+			$startSelector = $i;
+
 			//Selectors and their contents that we want to disregard
 			//We want to mark the selector, its arguments, and its content
 			//Example: we want to mark the entire <a href="localhost">Localhost</a>
-			if ( substr($content, $i, 3) == '<a ' ) {			
-				while( $i < strlen( $content ) ) {				
-					if (substr($content, $i, 4) == '</a>') {	
+			if ( substr($content, $i, 3) == '<a ' ) {
+				while( $i < strlen( $content ) ) {
+					if (substr($content, $i, 4) == '</a>') {
 						$endSelector = $i + 4;
 							array_push( $aSelector, array( $startSelector, $endSelector ) );
 						break;
 					}
 					$i++;
 				}
-			} else if ( 
+			} else if (
 				( substr( $content, $i, 2 ) == '<h' ) &&
 				( is_numeric( substr($content, $i+2, 1 ) ) )
-			) {			
-				while( $i < strlen( $content ) ) {				
-					if ( substr( $content, $i, 3 ) == '</h' ) {	
+			) {
+				while( $i < strlen( $content ) ) {
+					if ( substr( $content, $i, 3 ) == '</h' ) {
 						$endSelector = $i+3;
 							array_push( $aSelector, array( $startSelector, $endSelector ) );
 						break;
@@ -97,8 +97,8 @@ function keyword_to_url_filter_handler( $content ) {
 			//Selectors that we want to disregard only their arguments
 			//We only want to mark the selector and its arguments, not its content
 			//Example: '<p class="test">Test</p>' we only mark '<p class="test">' and '</p>', not 'Test'
-				while( $i < strlen( $content ) ) {				
-					if ( substr( $content, $i, 1 ) == '>' ) {		
+				while( $i < strlen( $content ) ) {
+					if ( substr( $content, $i, 1 ) == '>' ) {
 						$endSelector = $i+1;
 						array_push( $aSelector, array( $startSelector, $endSelector ) );
 						break;
@@ -109,7 +109,7 @@ function keyword_to_url_filter_handler( $content ) {
 		}
 		$i++;
 	}
-	
+
 	/*
 	//Debug
 	$aDebug = array();
@@ -118,17 +118,17 @@ function keyword_to_url_filter_handler( $content ) {
 	}
 	var_dump($aDebug);
 	*/
-	
+
 	//---------------------------------------------
 	//Find all the keyword boundaries
-	
+
 	$aReplace = array();
 	for ( $i=0; $i<count($aKeywords); $i++ ) {
 		//I'd like to replace the regex below with my own parser in the future
 		preg_match_all( '/\b' . $aKeywords[$i][0] .'\b/i', $content, $matches, PREG_OFFSET_CAPTURE );
 		$aMatches = $matches[0];
 		for ( $j=0; $j<count($aMatches); $j++ ) {
-			$m = $aMatches[$j][1]; 
+			$m = $aMatches[$j][1];
 			$n = $m + strlen( $aMatches[$j][0] ) - 1;
 			$inAnchor = 0;
 			for ( $k=0; $k<count($aSelector); $k++ ) {
@@ -143,14 +143,14 @@ function keyword_to_url_filter_handler( $content ) {
 				array_push( $aReplace, array( $m, $n, $aMatches[$j][0], $aKeywords[$i][1] ) );
 				if ( $mcn_keyword_to_url_first_only == 1 ) {
 					break;
-				} 
+				}
 			}
 		}
 	}
-	
+
 	//See notes on the compareOrder funtion below
 	usort( $aReplace, 'compareOrder' );
-	
+
 	//---------------------------------------------
 	//Replace keywords with their URLs
 
@@ -173,7 +173,7 @@ function keyword_to_url_filter_handler( $content ) {
 			$i = $keywordEnd + 1;
 		}
 	}
-	
+
 	$temp .= substr( $content, $i );
 	return ( $temp );
 }
@@ -185,7 +185,7 @@ function keyword_to_url_filter_handler( $content ) {
 //This way we order by keyword start and then by the largest keyword that starts there
 function compareOrder( $a, $b ) {
 	$retval = $a[0] - $b[0];
-	if( !$retval ) { 
+	if( !$retval ) {
 		return $b[1] - $a[1];
 	}
 	return $retval;
@@ -194,18 +194,18 @@ function compareOrder( $a, $b ) {
 //Our initial string to sort contains the keyword-URL pair with a separator: mcn0
 //Example keyword: Site, URL: localhost would look like this: Sitemcn0localhost
 //We want to sort only the keyword portion and also have it case-insensitive
-//It would be nice to add a natural order algorithm to this in the future 
+//It would be nice to add a natural order algorithm to this in the future
 function compareOrder2( $a, $b ) {
 
 	if ( strtolower($a) == strtolower($b) ) { return 0; }
-	
+
 	//Obtain the portion before the separator mcn0
 	$ai = strpos( $a, 'mcn0' );
 	$aa = substr( $a, 0, $ai );
-	
+
 	$bi = strpos( $b, 'mcn0' );
 	$bb = substr( $b, 0, $bi );
-	
+
 	//Check that portion from above in a case-insensitive manner
 	return ( strtolower($aa) < strtolower($bb) ) ? -1 : 1;
 }
@@ -219,27 +219,27 @@ if ( is_admin() ){
 	add_action( 'admin_menu', 'add_keyword_to_url_admin_menu' );
 
 	function add_keyword_to_url_admin_enqueue_scripts($hook) {
-		
+
 		//Ensure our plugin only loads on our admin page -- rather than on every admin page!
 		//We use a global ($add_keyword_to_url_settings_page). See also notes in add_keyword_to_url_admin_menu().
 		global $add_keyword_to_url_settings_page;
 		if ( $hook != $add_keyword_to_url_settings_page ) {
 			return;
 		}
-		
-		wp_enqueue_script( 
-			'add_keyword_to_url_script',  
-			plugins_url( 'keyword-to-url.js', __FILE__ ), 
-			false, 
-			'1.5' );
+
+		wp_enqueue_script(
+			'add_keyword_to_url_script',
+			plugins_url( 'keyword-to-url.js', __FILE__ ),
+			false,
+			'1.6' );
 	}
 
 	function add_keyword_to_url_admin_menu() {
-		
+
 		//Note if the name had spaces then be sure to use dashes instead of spaces in the slug!
-		
+
 		//See notes in add_keyword_to_url_admin_enqueue_scripts($hook)
-		
+
 		global $add_keyword_to_url_settings_page;
 		$add_keyword_to_url_settings_page = add_options_page(
 			'Keyword to URL', 'Keyword to URL', 'administrator',
@@ -251,16 +251,14 @@ function keyword_to_url_html_page() {
 ?>
 	<a id="mcnkeywordtourlBaseAnchor" href="#">Test</a>
 	<div>
-		
-		<p style="color: red;">This plugin is no longer being maintained and should be considered deprecated.</p>
-		
+
 		<h2>Keyword to URL Options</h2>
-		
+
 		<p>
-		Keyword to URL creates a list of keywords with corresponding URLs. 
+		Keyword to URL creates a list of keywords with corresponding URLs.
 		<br />Any keyword that appears in your posts (and pages) will show up as a link.
 		</p>
-		
+
 		<p>
 		Keyword: <input id="mcnkeywordtourlKeyword" type="text" />
 		URL: <input id="mcnkeywordtourlURL" type="text" />
@@ -270,12 +268,12 @@ function keyword_to_url_html_page() {
 		<span id="mcnkeywordtourlValid2c" style="color:#f00">* Ampersands (&amp;) are not allowed in the Keyword.</span>
 		<span id="mcnkeywordtourlValid3a" style="color:#f00">* The keyword is already in the table.</span>
 		</p>
-		
+
 		<table id="mcnkeywordtourlTable">
 		<tbody>
 		<?php
 		$mcn_keyword_to_url_serialized = get_option( 'mcn_keyword_to_url_serialized' );
-		if ( strlen( $mcn_keyword_to_url_serialized ) > 0 ) { 
+		if ( strlen( $mcn_keyword_to_url_serialized ) > 0 ) {
 			$e1 = explode( 'mcn1', $mcn_keyword_to_url_serialized );
 			usort( $e1, 'compareOrder2' );
 			foreach ( $e1 as $e1Value ) {
@@ -284,7 +282,7 @@ function keyword_to_url_html_page() {
 					$urlPrefix = ( strpos( $e2[1], '@' ) ) ? 'mailto:' : 'http://';
 					print(
 						'<tr>' .
-							'<td>' . 
+							'<td>' .
 								'<span class="mcnkeywordtourlRemoveClass">Remove</span>' .
 							'</td>' .
 							'<td class="mcnkeywordtourlKeywordClass">' . $e2[0] . '</td>' .
@@ -296,22 +294,22 @@ function keyword_to_url_html_page() {
 		?>
 		</tbody>
 		</table>
-		
+
 		<form method="post" action="options.php">
 			<?php wp_nonce_field( 'update-options' ); ?>
-			
-			<input 
+
+			<input
 				id="mcn_keyword_to_url_serialized" name="mcn_keyword_to_url_serialized"
 				type="hidden"
 				value='<?php echo get_option( 'mcn_keyword_to_url_serialized' ); ?>' />
-			
+
 			<br />
-			<input 
+			<input
 				id="mcn_keyword_to_url_first_only" name="mcn_keyword_to_url_first_only"
-				type="checkbox" 
+				type="checkbox"
 				value="1" <?php checked( get_option( 'mcn_keyword_to_url_first_only' ), 1 ); ?> />
 			<span>Just link the first occurrence of the keyword in the post (otherwise all occurrences are linked).</span>
-			
+
 			<input type="hidden" name="action" value="update" />
 			<input type="hidden" name="page_options" value="mcn_keyword_to_url_serialized, mcn_keyword_to_url_first_only" />
 			<p>
@@ -319,7 +317,7 @@ function keyword_to_url_html_page() {
 			<strong>Be sure to Save Changes before leaving this page.</strong>
 			</p>
 		</form>
-		
+
 		<br />
 		<h2>Import</h2>
 		<div>
@@ -334,12 +332,12 @@ function keyword_to_url_html_page() {
 			<br /><em>-The keyword or its URL contains single or double quotes (which are not allowed).</em>
 			<br /><em>-The keyword contains an ampersand (which is not allowed).</em>
 			</p>
-			
+
 			<form id="mcnkeywordtourlImportForm" name="mcnkeywordtourlImportForm" action="#">
 				<p>
-				<input 
+				<input
 					id="mcnkeywordtourlImportAppend" name="mcnkeywordtourlImportAppend"
-					type="checkbox" 
+					type="checkbox"
 					value="1" />
 				<span>Append imported keywords to the existing list.</span>
 				</p>
@@ -350,17 +348,17 @@ function keyword_to_url_html_page() {
 				<span id="mcnkeywordtourlValid5" style="color:#f00">* Your browser does not support HTML5 file reading.</span>
 				<br />
 			</form>
-			
+
 			<p>&nbsp;</p>
 			<h2>Export</h2>
 			<p><strong>Exporting</strong> only exports what is currently saved.
 			<br />Please <strong>Save Changes</strong> if you have updated the table above before exporting.
 			</p>
-			
-			<form 
+
+			<form
 				method="post" id="mcnkeywordtourlExportForm" name="mcnkeywordtourlExportForm"
 				action="<?php echo plugin_dir_url( __FILE__ ); ?>keyword-to-url-export.php">
-				<input 
+				<input
 					id="mcnkeywordtourlExportContent" name="mcnkeywordtourlExportContent"
 					type="hidden"
 					value="<?php echo get_option('mcn_keyword_to_url_serialized'); ?>"
@@ -368,7 +366,7 @@ function keyword_to_url_html_page() {
 				<input id="mcnkeywordtourlExport" type="Submit" value="Export" />
 			</form>
 		</div>
-		
+
 	</div>
 <?php
 }
