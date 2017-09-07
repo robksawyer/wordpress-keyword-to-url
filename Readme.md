@@ -1,5 +1,5 @@
 === Keyword to URL ===
-Contributors: MBird
+Contributors: MBird, robksawyer
 Tags: keywords, links
 Requires at least: 3.2
 Tested up to: 4.3
@@ -59,6 +59,9 @@ The plugin does not allow keywords with single or double quotes or with ampersan
 
 == Changelog ==
 
+= 1.6 =
+* Trying to keep this alive.
+
 = 1.5 =
 * Final version with deprecation notice
 
@@ -67,7 +70,7 @@ The plugin does not allow keywords with single or double quotes or with ampersan
 
 = 1.3 =
 * Added Import/Export capabilities
-* Change the way .js files are enqueued 
+* Change the way .js files are enqueued
 * Converted keyword-to-url.js to use JQuery
 * Minor changes to the User Interface
 * Minor changes to the PHP code
