@@ -12,11 +12,11 @@ Keyword to URL allows admins to create and save a list of keywords paired with U
 
 ## Description
 
-Note:
+### Note:
 
 The plugin is no longer maintained and should be considered deprecated.
 
-About:
+### About:
 
 The plugin allows administrators to build and save a table of keywords and URLs. Once saved any post (or page) that has the keyword will now show that word (or phrase) as a link.
 
@@ -54,12 +54,12 @@ The plugin will only link the first contact us as the second one is already link
 Dealing with keywords that have special or dis-allowed characters:
 The plugin does not allow keywords with single or double quotes or with ampersands. If you have words in your posts or pages that conatin these characters and need links you can just manually add them yourself. You can always manually add a link anwhere on your site. The plugin will not affect your existing links (see notes above).
 
-## Installation ==
+## Installation
 
 1. Unzip the plugin to the /wp-content/plugins/directory.
 1. Activate the plugin through the Plugins menu in WordPress.
 
-## Changelog ==
+## Changelog
 
 ### 1.6
 * Trying to keep this alive.
