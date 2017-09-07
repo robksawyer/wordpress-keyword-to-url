@@ -3,7 +3,7 @@
 - Contributors: MBird, robksawyer
 - Tags: keywords, links
 - Requires at least: 3.2
-- Tested up to: 4.3
+- Tested up to: 4.8
 - Stable tag: 1.6
 - License: GPLv3 or later
 - License URI: http://www.gnu.org/licenses/gpl-3.0.en.html
