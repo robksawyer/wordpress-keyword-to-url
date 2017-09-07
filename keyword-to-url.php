@@ -251,8 +251,7 @@ function keyword_to_url_html_page() {
 ?>
 	<a id="mcnkeywordtourlBaseAnchor" href="#">Test</a>
 	<div>
-
-		<h2>Keyword to URL Options</h2>
+		<h2 style="margin-top: 10px;">Keyword to URL Options</h2>
 
 		<p>
 		Keyword to URL creates a list of keywords with corresponding URLs.
