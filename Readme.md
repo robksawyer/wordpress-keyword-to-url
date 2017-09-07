@@ -12,11 +12,11 @@ Keyword to URL allows admins to create and save a list of keywords paired with U
 
 ## Description
 
-### Note:
+### Note
 
 The plugin is no longer maintained and should be considered deprecated.
 
-### About:
+### About
 
 The plugin allows administrators to build and save a table of keywords and URLs. Once saved any post (or page) that has the keyword will now show that word (or phrase) as a link.
 
@@ -31,11 +31,11 @@ Anytime a keyword is already linked in a post it will be left unaffected by the 
 You can signal a post to not use the plugin's linking by adding a comment anywhere in the post:
 &lt;!-- no keywords --&gt;
 
-### Tips:
+### Tips
 
 If you have both a keyword and a keyword phrase that uses that keyword, the longer of the two will be given priority.
 
-#### Example:
+#### Example
 You have keywords for world and world record.
 Your content is: We saw another world record heat wave today. This was not a great surprise to the world at large as many people around the world have reported warmer than usual temperatures this week.
 
