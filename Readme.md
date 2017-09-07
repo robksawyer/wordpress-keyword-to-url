@@ -56,6 +56,7 @@ The plugin does not allow keywords with single or double quotes or with ampersan
 
 ## Installation
 
+1. Download a [zip version](https://github.com/robksawyer/wordpress-keyword-to-url/archive/master.zip).
 1. Unzip the plugin to the /wp-content/plugins/directory.
 1. Activate the plugin through the Plugins menu in WordPress.
 
