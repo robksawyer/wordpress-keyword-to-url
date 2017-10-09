@@ -164,8 +164,15 @@ function keyword_to_url_filter_handler( $content ) {
 			$url = $aReplace[$j][3];
 			$temp .= substr( $content, $i, $keywordStart - $i );
 			$urlPrefix = '';
+			// Handles replacing dirty `https//` and `http//` url prefixes
+			$url = str_replace('http//', '', $url);
+			$url = str_replace('https//', '', $url);
+			$url = str_replace('http://', '', $url);
+			$url = str_replace('https://', '', $url);
 			if ( strpos( $url, '@' ) === false ) {
-				$urlPrefix = 'https://';
+				if(strpos( $url, 'http:' ) === false) {
+					$urlPrefix = 'https://';
+				}
 			} else {
 				$urlPrefix = 'mailto:';
 			}
@@ -278,7 +285,16 @@ function keyword_to_url_html_page() {
 			foreach ( $e1 as $e1Value ) {
 				$e2 = explode( 'mcn0', $e1Value );
 				if ( !empty( $e2[0] ) ) {
-					$urlPrefix = ( strpos( $e2[1], '@' ) ) ? 'mailto:' : 'https://';
+					// Handles replacing dirty `https//` and `http//` url prefixes
+					$e2[1] = str_replace('http//', '', $e2[1]);
+					$e2[1] = str_replace('https//', '', $e2[1]);
+					$e2[1] = str_replace('https://', '', $e2[1]);
+					$e2[1] = str_replace('http://', '', $e2[1]);
+					if ( strpos( $e2[1], '@' ) ) {
+						$urlPrefix = 'mailto:';
+					} else {
+						$urlPrefix = 'https://';
+					}
 					print(
 						'<tr>' .
 							'<td>' .
